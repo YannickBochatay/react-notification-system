@@ -1,9 +1,9 @@
-import { Component } from "react"
+import * as React from "react"
 import PropTypes from "prop-types"
 import * as Constants from "./constants"
 import NotificationItem from "./NotificationItem"
 
-export default class NotificationContainer extends Component {
+export default class NotificationContainer extends React.Component {
   constructor(props) {
     super(props);
     // Fix position if width is overrided

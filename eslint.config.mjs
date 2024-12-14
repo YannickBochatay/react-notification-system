@@ -10,13 +10,6 @@ export default [
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
   {
-    rules: {
-      "react/react-in-jsx-scope":"off",
-      "mocha/no-mocha-arrows":"off",
-      "mocha/max-top-level-suites":"off"
-    }
-  },
-  {
     ignores: [
       "test/*",
       "dist/*",

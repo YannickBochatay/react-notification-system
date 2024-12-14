@@ -1,33 +1,13 @@
-import { Component, createRef } from "react"
+import * as React from "react"
 import PropTypes from "prop-types"
 import * as Constants from "./constants"
 import * as Helpers from "./helpers"
-
-/* From Modernizr */
-var whichTransitionEvent = function() {
-  var el = document.createElement('fakeelement');
-  var transition;
-  var transitions = {
-    transition: 'transitionend',
-    OTransition: 'oTransitionEnd',
-    MozTransition: 'transitionend',
-    WebkitTransition: 'webkitTransitionEnd'
-  };
-
-  Object.keys(transitions).forEach(function(transitionKey) {
-    if (el.style[transitionKey] !== undefined) {
-      transition = transitions[transitionKey];
-    }
-  });
-
-  return transition;
-};
 
 function _allowHTML(string) {
   return { __html: string };
 }
 
-export default class NotificationItem extends Component {
+export default class NotificationItem extends React.Component {
   constructor(props) {
     super(props);
     this._notificationTimer = null;
@@ -35,7 +15,7 @@ export default class NotificationItem extends Component {
     this._noAnimation = null;
     this._isMounted = false;
     this._removeCount = 0;
-    this._ref = createRef();
+    this._ref = React.createRef();
 
     this.state = {
       visible: undefined,
@@ -173,7 +153,6 @@ export default class NotificationItem extends Component {
 
   componentDidMount() {
     var self = this;
-    var transitionEvent = whichTransitionEvent();
     var notification = this.props.notification;
     var element = this._ref.current;
 
@@ -183,11 +162,7 @@ export default class NotificationItem extends Component {
 
     // Watch for transition end
     if (!this._noAnimation) {
-      if (transitionEvent) {
-        element.addEventListener(transitionEvent, this._onTransitionEnd);
-      } else {
-        this._noAnimation = true;
-      }
+      element.addEventListener("transitionend", this._onTransitionEnd);
     }
 
     if (notification.autoDismiss) {
@@ -226,8 +201,7 @@ export default class NotificationItem extends Component {
 
   componentWillUnmount() {
     var element = this._ref.current;
-    var transitionEvent = whichTransitionEvent();
-    element.removeEventListener(transitionEvent, this._onTransitionEnd);
+    element.removeEventListener("transitionend", this._onTransitionEnd);
     this._isMounted = false;
   }
 

@@ -1,10 +1,10 @@
-import { Component } from "react"
+import * as React from "react"
 import PropTypes from "prop-types"
 import * as Constants from "./constants"
 import NotificationContainer from "./NotificationContainer"
 import Styles from "./styles"
 
-export default class NotificationSystem extends Component {
+export default class NotificationSystem extends React.Component {
   constructor() {
     super();
     this.state = {
