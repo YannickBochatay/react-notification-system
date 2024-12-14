@@ -1,11 +1,10 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var merge = require('object-assign');
-var NotificationContainer = require('./NotificationContainer');
-var Constants = require('./constants');
-var Styles = require('./styles');
+import { Component } from "react"
+import PropTypes from "prop-types"
+import * as Constants from "./constants"
+import NotificationContainer from "./NotificationContainer"
+import Styles from "./styles"
 
-class NotificationSystem extends React.Component {
+export default class NotificationSystem extends Component {
   constructor() {
     super();
     this.state = {
@@ -61,7 +60,7 @@ class NotificationSystem extends React.Component {
 
   wrapper() {
     if (!this.overrideStyle) return {};
-    return merge({}, Styles.Wrapper, this.overrideStyle.Wrapper);
+    return Object.assign({}, Styles.Wrapper, this.overrideStyle.Wrapper);
   }
 
   container(position) {
@@ -78,7 +77,7 @@ class NotificationSystem extends React.Component {
       this.overrideWidth = override[position].width;
     }
 
-    return merge(
+    return Object.assign(
       {},
       Styles.Containers.DefaultStyle,
       Styles.Containers[position],
@@ -92,7 +91,7 @@ class NotificationSystem extends React.Component {
       var _element = this.elements[element];
       var override = this.overrideStyle[_element] || {};
       if (!this.overrideStyle) return {};
-      return merge(
+      return Object.assign(
         {},
         Styles[_element].DefaultStyle,
         Styles[_element][level],
@@ -122,10 +121,9 @@ class NotificationSystem extends React.Component {
   }
 
   addNotification(notification) {
-    var _notification = merge({}, Constants.notification, notification);
+    var _notification = Object.assign({}, Constants.notification, notification);
     var notifications = this.state.notifications;
     var i;
-
 
     if (!_notification.level) {
       throw new Error('notification level is required.');
@@ -135,7 +133,7 @@ class NotificationSystem extends React.Component {
       throw new Error("'" + _notification.level + "' is not a valid level.");
     }
 
-    // eslint-disable-next-line
+
     if (isNaN(_notification.autoDismiss)) {
       throw new Error("'autoDismiss' must be a number.");
     }
@@ -155,7 +153,6 @@ class NotificationSystem extends React.Component {
     _notification.ref = 'notification-' + _notification.uid;
     this.uid += 1;
 
-
     // do not add if the notification already exists based on supplied uid
     for (i = 0; i < notifications.length; i += 1) {
       if (notifications[i].uid === _notification.uid) {
@@ -168,7 +165,6 @@ class NotificationSystem extends React.Component {
     } else {
       notifications.push(_notification);
     }
-
 
     if (typeof _notification.onAdd === 'function') {
       notification.onAdd(_notification);
@@ -224,7 +220,7 @@ class NotificationSystem extends React.Component {
       return;
     }
 
-    newNotifications.push(merge({}, foundNotification, newNotification));
+    newNotifications.push(Object.assign({}, foundNotification, newNotification));
 
     this.setState({
       notifications: newNotifications
@@ -292,4 +288,3 @@ NotificationSystem.defaultProps = {
   newOnTop: false
 };
 
-module.exports = NotificationSystem;

@@ -5,7 +5,6 @@ import TestUtils from 'react-dom/test-utils';
 import { expect } from 'chai';
 import NotificationSystem from 'NotificationSystem';
 import { positions, levels } from 'constants';
-import merge from 'object-assign';
 
 const defaultNotification = {
   title: 'This is a title',
@@ -45,7 +44,7 @@ describe('Notification Component', function() {
     node = window.document.createElement('div');
     instance = TestUtils.renderIntoDocument(React.createElement(ElementWrapper), node);
     component = instance.refs[ref];
-    notificationObj = merge({}, defaultNotification);
+    notificationObj = Object.assign({}, defaultNotification);
 
     clock = sinon.useFakeTimers();
   });
@@ -446,14 +445,14 @@ describe('Notification Component', function() {
 
   it('should throw an error if autoDismiss is not a number', done => {
     notificationObj.autoDismiss = 'string';
-    expect(() => component.addNotification(notificationObj)).to.throw(/\'autoDismiss\' must be a number./);
+    expect(() => component.addNotification(notificationObj)).to.throw(/'autoDismiss' must be a number./);
     done();
   });
 
   it('should render 2nd notification below 1st one', done => {
-    component.addNotification(merge({}, defaultNotification, {title: '1st'}));
-    component.addNotification(merge({}, defaultNotification, {title: '2nd'}));
-    
+    component.addNotification(Object.assign({}, defaultNotification, {title: '1st'}));
+    component.addNotification(Object.assign({}, defaultNotification, {title: '2nd'}));
+
     const notifications = TestUtils.scryRenderedDOMComponentsWithClass(instance, 'notification');
     expect(notifications[0].getElementsByClassName('notification-title')[0].textContent).to.equal('1st');
     expect(notifications[1].getElementsByClassName('notification-title')[0].textContent).to.equal('2nd');
@@ -461,13 +460,11 @@ describe('Notification Component', function() {
   });
 });
 
-
 describe('Notification Component with newOnTop=true', function() {
   let node;
   let instance;
   let component;
   let clock;
-  let notificationObj;
   const ref = 'notificationSystem';
 
   this.timeout(10000);
@@ -482,7 +479,6 @@ describe('Notification Component with newOnTop=true', function() {
     node = window.document.createElement("div");
     instance = TestUtils.renderIntoDocument(React.createElement(ElementWrapper), node);
     component = instance.refs[ref];
-    notificationObj = merge({}, defaultNotification);
 
     clock = sinon.useFakeTimers();
   });
@@ -492,8 +488,8 @@ describe('Notification Component with newOnTop=true', function() {
   });
 
   it('should render 2nd notification above 1st one', done => {
-    component.addNotification(merge({}, defaultNotification, {title: '1st'}));
-    component.addNotification(merge({}, defaultNotification, {title: '2nd'}));
+    component.addNotification(Object.assign({}, defaultNotification, {title: '1st'}));
+    component.addNotification(Object.assign({}, defaultNotification, {title: '2nd'}));
 
     const notifications = TestUtils.scryRenderedDOMComponentsWithClass(instance, 'notification');
     expect(notifications[0].getElementsByClassName('notification-title')[0].textContent).to.equal('2nd');

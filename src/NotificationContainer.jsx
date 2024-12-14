@@ -1,18 +1,18 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var NotificationItem = require('./NotificationItem');
-var Constants = require('./constants');
+import { Component } from "react"
+import PropTypes from "prop-types"
+import * as Constants from "./constants"
+import NotificationItem from "./NotificationItem"
 
-class NotificationContainer extends React.Component {
+export default class NotificationContainer extends Component {
   constructor(props) {
     super(props);
     // Fix position if width is overrided
     this._style = props.getStyles.container(props.position);
 
     if (
-      props.getStyles.overrideWidth &&
-      (props.position === Constants.positions.tc ||
-        props.position === Constants.positions.bc)
+      props.getStyles.overrideWidth
+      && (props.position === Constants.positions.tc
+        || props.position === Constants.positions.bc)
     ) {
       this._style.marginLeft = -(props.getStyles.overrideWidth / 2);
     }
@@ -41,8 +41,9 @@ class NotificationContainer extends React.Component {
           onRemove={ this.props.onRemove }
           noAnimation={ this.props.noAnimation }
           allowHTML={ this.props.allowHTML }
-          children={ this.props.children }
-        />
+        >
+          { this.props.children }
+        </NotificationItem>
       );
     });
 
@@ -66,5 +67,3 @@ NotificationContainer.propTypes = {
   allowHTML: PropTypes.bool,
   children: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
 };
-
-module.exports = NotificationContainer;

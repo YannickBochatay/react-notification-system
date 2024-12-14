@@ -20,7 +20,7 @@ var defaultColors = {
 };
 var defaultShadowOpacity = '0.9';
 
-var STYLES = {
+export default {
 
   Wrapper: {},
   Containers: {
@@ -257,5 +257,3 @@ var STYLES = {
     }
   }
 };
-
-module.exports = STYLES;

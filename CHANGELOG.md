@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.0 - Dec 14, 2024
+
+* Compatibility with React 19
+
 ## 0.3.0 - Nov 14, 2019
 
 * Updated to class components and removed future deprecated lifecycle methods (thanks to @oskarer)

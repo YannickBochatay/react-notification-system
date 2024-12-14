@@ -1,8 +1,4 @@
 .DS_Store
-coverage/
 node_modules/
 dist/
-example/node_modules/
-example/build/.module-cache/
-*.log*
-.idea
+.parcel-cache

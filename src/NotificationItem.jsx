@@ -1,9 +1,7 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var ReactDOM = require('react-dom');
-var Constants = require('./constants');
-var Helpers = require('./helpers');
-var merge = require('object-assign');
+import { Component, createRef } from "react"
+import PropTypes from "prop-types"
+import * as Constants from "./constants"
+import * as Helpers from "./helpers"
 
 /* From Modernizr */
 var whichTransitionEvent = function() {
@@ -29,7 +27,7 @@ function _allowHTML(string) {
   return { __html: string };
 }
 
-class NotificationItem extends React.Component {
+export default class NotificationItem extends Component {
   constructor(props) {
     super(props);
     this._notificationTimer = null;
@@ -37,6 +35,7 @@ class NotificationItem extends React.Component {
     this._noAnimation = null;
     this._isMounted = false;
     this._removeCount = 0;
+    this._ref = createRef();
 
     this.state = {
       visible: undefined,
@@ -176,7 +175,7 @@ class NotificationItem extends React.Component {
     var self = this;
     var transitionEvent = whichTransitionEvent();
     var notification = this.props.notification;
-    var element = ReactDOM.findDOMNode(this);
+    var element = this._ref.current;
 
     this._height = element.offsetHeight;
 
@@ -217,16 +216,16 @@ class NotificationItem extends React.Component {
   _handleNotificationClick() {
     var dismissible = this.props.notification.dismissible;
     if (
-      dismissible === 'both' ||
-      dismissible === 'click' ||
-      dismissible === true
+      dismissible === 'both'
+      || dismissible === 'click'
+      || dismissible === true
     ) {
       this._dismiss();
     }
   }
 
   componentWillUnmount() {
-    var element = ReactDOM.findDOMNode(this);
+    var element = this._ref.current;
     var transitionEvent = whichTransitionEvent();
     element.removeEventListener(transitionEvent, this._onTransitionEnd);
     this._isMounted = false;
@@ -235,7 +234,7 @@ class NotificationItem extends React.Component {
   render() {
     var notification = this.props.notification;
     var className = 'notification notification-' + notification.level;
-    var notificationStyle = merge({}, this._styles.notification);
+    var notificationStyle = Object.assign({}, this._styles.notification);
     var cssByPos = this._getCssPropertyByPosition();
     var dismiss = null;
     var actionButton = null;
@@ -311,9 +310,9 @@ class NotificationItem extends React.Component {
     }
 
     if (
-      notification.dismissible === 'both' ||
-      notification.dismissible === 'button' ||
-      notification.dismissible === true
+      notification.dismissible === 'both'
+      || notification.dismissible === 'button'
+      || notification.dismissible === true
     ) {
       dismiss = (
         <span
@@ -356,6 +355,7 @@ class NotificationItem extends React.Component {
         onMouseLeave={ this._handleMouseLeave }
         style={ notificationStyle }
         role="alert"
+        ref={ this._ref }
       >
         {title}
         {message}
@@ -380,5 +380,3 @@ NotificationItem.defaultProps = {
   onRemove: function() {},
   allowHTML: false
 };
-
-module.exports = NotificationItem;
