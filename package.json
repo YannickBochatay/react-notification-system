@@ -7,7 +7,8 @@
   "module": "dist/module.js",
   "scripts": {
     "watch": "parcel watch",
-    "build": "parcel build"
+    "build": "parcel build --config ./prod.parcelrc",
+    "example": "parcel example/index.html"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
     "eslint": "^9.17.0",
     "eslint-plugin-react": "^7.37.2",
     "parcel": "^2.13.2",
+    "process": "^0.11.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   }
