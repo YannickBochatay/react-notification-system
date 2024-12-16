@@ -35,7 +35,7 @@ export default class NotificationContainer extends React.Component {
 
     notifications = this.props.notifications.map((notification, index) => {
 
-      if (!this.itemRefs[index]) this.itemRefs.push(React.createRef())
+      if (!this.itemRefs[index]) this.itemRefs[index] = React.createRef()
 
       return (
         <NotificationItem

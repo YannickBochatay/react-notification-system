@@ -182,8 +182,8 @@ export default class NotificationSystem extends React.Component {
     var foundNotification = null;
 
     this.containerRefs.forEach(container => {
-      container.itemRefs.forEach((_notification) => {
-        if (_notification.props.notification.uid === (notification.uid ?? notification)) {
+      container.current?.itemRefs.forEach((_notification) => {
+        if (_notification.current.props.notification.uid === (notification.uid ?? notification)) {
           // NOTE: Stop iterating further and return the found notification.
           // Since UIDs are uniques and there won't be another notification found.
           foundNotification = _notification;
@@ -227,7 +227,7 @@ export default class NotificationSystem extends React.Component {
 
   clearNotifications() {
     this.containerRefs.forEach(container => {
-      container.itemRefs.forEach(notification => notification._hideNotification())
+      container.current?.itemRefs.forEach(notification => notification.current._hideNotification())
     });
   }
 
