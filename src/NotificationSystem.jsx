@@ -22,6 +22,7 @@ export default class NotificationSystem extends React.Component {
       action: 'Action',
       actionWrapper: 'ActionWrapper'
     };
+    this.containerRefs = Object.keys(Constants.positions).map(() => React.createRef())
 
     this.setOverrideStyle = this.setOverrideStyle.bind(this);
     this.wrapper = this.wrapper.bind(this);
@@ -180,17 +181,14 @@ export default class NotificationSystem extends React.Component {
   getNotificationRef(notification) {
     var foundNotification = null;
 
-    Object.keys(this.refs).forEach((container) => {
-      if (container.indexOf('container') > -1) {
-        Object.keys(this.refs[container].refs).forEach((_notification) => {
-          var uid = notification.uid ? notification.uid : notification;
-          if (_notification === 'notification-' + uid) {
-            // NOTE: Stop iterating further and return the found notification.
-            // Since UIDs are uniques and there won't be another notification found.
-            foundNotification = this.refs[container].refs[_notification];
-          }
-        });
-      }
+    this.containerRefs.forEach(container => {
+      container.itemRefs.forEach((_notification) => {
+        if (_notification.props.notification.uid === (notification.uid ?? notification)) {
+          // NOTE: Stop iterating further and return the found notification.
+          // Since UIDs are uniques and there won't be another notification found.
+          foundNotification = _notification;
+        }
+      });
     });
 
     return foundNotification;
@@ -228,12 +226,8 @@ export default class NotificationSystem extends React.Component {
   }
 
   clearNotifications() {
-    Object.keys(this.refs).forEach((container) => {
-      if (container.indexOf('container') > -1) {
-        Object.keys(this.refs[container].refs).forEach((_notification) => {
-          this.refs[container].refs[_notification]._hideNotification();
-        });
-      }
+    this.containerRefs.forEach(container => {
+      container.itemRefs.forEach(notification => notification._hideNotification())
     });
   }
 
@@ -242,7 +236,7 @@ export default class NotificationSystem extends React.Component {
     var notifications = this.state.notifications;
 
     if (notifications.length) {
-      containers = Object.keys(Constants.positions).map((position) => {
+      containers = Object.keys(Constants.positions).map((position, index) => {
         var _notifications = notifications.filter((notification) => {
           return position === notification.position;
         });
@@ -253,7 +247,7 @@ export default class NotificationSystem extends React.Component {
 
         return (
           <NotificationContainer
-            ref={ 'container-' + position }
+            ref={ this.containerRefs[index] }
             key={ position }
             position={ position }
             notifications={ _notifications }

@@ -206,6 +206,7 @@ export default class NotificationItem extends React.Component {
   }
 
   render() {
+
     var notification = this.props.notification;
     var className = 'notification notification-' + notification.level;
     var notificationStyle = Object.assign({}, this._styles.notification);

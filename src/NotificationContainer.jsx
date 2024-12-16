@@ -9,6 +9,8 @@ export default class NotificationContainer extends React.Component {
     // Fix position if width is overrided
     this._style = props.getStyles.container(props.position);
 
+    this.itemRefs = []
+
     if (
       props.getStyles.overrideWidth
       && (props.position === Constants.positions.tc
@@ -31,16 +33,19 @@ export default class NotificationContainer extends React.Component {
       this.props.notifications.reverse();
     }
 
-    notifications = this.props.notifications.map((notification) => {
+    notifications = this.props.notifications.map((notification, index) => {
+
+      if (!this.itemRefs[index]) this.itemRefs.push(React.createRef())
+
       return (
         <NotificationItem
-          ref={ 'notification-' + notification.uid }
           key={ notification.uid }
           notification={ notification }
           getStyles={ this.props.getStyles }
           onRemove={ this.props.onRemove }
           noAnimation={ this.props.noAnimation }
           allowHTML={ this.props.allowHTML }
+          ref={ this.itemRefs[index] }
         >
           { this.props.children }
         </NotificationItem>
