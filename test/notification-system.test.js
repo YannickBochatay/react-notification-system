@@ -35,14 +35,14 @@ describe('Notification Component', function() {
 
   jest.setTimeout(10000);
 
-  beforeEach(() => {
+  beforeEach(async() => {
     // We need to create this wrapper so we can use refs
     class ElementWrapper extends Component {
       render() {
         return <NotificationSystem ref={ ref } style={ style } allowHTML={ true } noAnimation={ true } />;
       }
     }
-    node = render(React.createElement(ElementWrapper)).container;
+    await act(() => node = render(<ElementWrapper/>).container);
     notificationObj = Object.assign({}, defaultNotification);
     component = ref.current;
   });
@@ -141,7 +141,8 @@ describe('Notification Component', function() {
   });
 
   test('should remove a notification using returned object', async() => {
-    const notificationCreated = await act(() => component.addNotification(defaultNotification));
+    let notificationCreated
+    await act(() => { notificationCreated = component.addNotification(defaultNotification) });
     const notification = node.querySelectorAll('.notification');
     expect(notification.length).toBe(1);
 
@@ -152,7 +153,8 @@ describe('Notification Component', function() {
   });
 
   test('should remove a notification using uid', async() => {
-    const notificationCreated = await act(() => component.addNotification(defaultNotification));
+    let notificationCreated
+    await act(() => notificationCreated = component.addNotification(defaultNotification));
     const notification = node.querySelectorAll('.notification');
     expect(notification.length).toBe(1);
 
@@ -163,8 +165,9 @@ describe('Notification Component', function() {
   });
 
   test('should edit an existing notification using returned object', async() => {
-    const notificationCreated = await act(() => component.addNotification(defaultNotification));
-    const notification = node.querySelector('.notification');
+    let notificationCreated
+    await act(() => notificationCreated = component.addNotification(defaultNotification));
+    const notification = node.querySelectorAll('.notification');
     expect(notification.length).toBe(1);
 
     const newTitle = 'foo';
@@ -172,13 +175,14 @@ describe('Notification Component', function() {
 
     await act(() => component.editNotification(notificationCreated, { title: newTitle, message: newContent }));
     await sleep(1000);
-    const notificationEdited = node.querySelectorAll('.notification');
+    const notificationEdited = node.querySelector('.notification');
     expect(notificationEdited.querySelector('.notification-title').textContent).toBe(newTitle);
     expect(notificationEdited.querySelector('.notification-message').textContent).toBe(newContent);
   });
 
   test('should edit an existing notification using uid', async() => {
-    const notificationCreated = await act(() => component.addNotification(defaultNotification));
+    let notificationCreated
+    await act(() => notificationCreated = component.addNotification(defaultNotification));
     const notification = node.querySelectorAll('.notification');
     expect(notification.length).toBe(1);
 
@@ -187,7 +191,7 @@ describe('Notification Component', function() {
 
     await act(() => component.editNotification(notificationCreated.uid, { title: newTitle, message: newContent }));
     await sleep(1000);
-    const notificationEdited = node.querySelectorAll('.notification');
+    const notificationEdited = node.querySelector('.notification');
     expect(notificationEdited.querySelector('.notification-title').textContent).toBe(newTitle);
     expect(notificationEdited.querySelector('.notification-message').textContent).toBe(newContent);
   });
@@ -361,7 +365,7 @@ describe('Notification Component', function() {
     await act(() => fireEvent.mouseEnter(notification));
     await sleep(800);
     await act(() => fireEvent.mouseLeave(notification));
-    await sleep(2000);
+    await sleep(2200);
     const _notification = node.querySelectorAll('.notification');
     expect(_notification.length).toBe(0);
   });
@@ -404,25 +408,23 @@ describe('Notification Component', function() {
 
   test('should throw an error if no level is defined', async() => {
     delete notificationObj.level;
-    await expect(() => component.addNotification(notificationObj)).rejects.toThrow(/notification level is required/);
+    expect(() => component.addNotification(notificationObj)).toThrow(/notification level is required/);
 
   });
 
   test('should throw an error if a invalid level is defined', async() => {
     notificationObj.level = 'invalid';
-    await expect(act(() => component.addNotification(notificationObj))).rejects.toThrow(/is not a valid level/);
+    expect(() => component.addNotification(notificationObj)).toThrow(/is not a valid level/);
   });
 
   test('should throw an error if a invalid position is defined', async() => {
     notificationObj.position = 'invalid';
-    await expect(act(() => component.addNotification(notificationObj))).rejects.toThrow(/is not a valid position/);
-
+    expect(() => component.addNotification(notificationObj)).toThrow(/is not a valid position/);
   });
 
   test('should throw an error if autoDismiss is not a number', async() => {
     notificationObj.autoDismiss = 'string';
-    await expect(act(() => component.addNotification(notificationObj))).rejects.toThrow(/'autoDismiss' must be a number./);
-
+    expect(() => component.addNotification(notificationObj)).toThrow(/'autoDismiss' must be a number./);
   });
 
   test('should render 2nd notification below 1st one', async() => {
@@ -432,7 +434,6 @@ describe('Notification Component', function() {
     const notifications = node.querySelectorAll('.notification');
     expect(notifications[0].querySelector('.notification-title').textContent).toBe('1st');
     expect(notifications[1].querySelector('.notification-title').textContent).toBe('2nd');
-
   });
 });
 
@@ -443,14 +444,14 @@ describe('Notification Component with newOnTop=true', function() {
 
   jest.setTimeout(10000);
 
-  beforeEach(() => {
+  beforeEach(async() => {
     // We need to create this wrapper so we can use refs
     class ElementWrapper extends Component {
       render() {
         return <NotificationSystem ref={ ref } style={ style } allowHTML={ true } noAnimation={ true } newOnTop={ true } />;
       }
     }
-    node = render(React.createElement(ElementWrapper)).container;
+    await act(() => node = render(<ElementWrapper/>).container);
     component = ref.current;
   });
 

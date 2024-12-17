@@ -65,6 +65,13 @@ class NotificationSystemExample extends React.Component {
               <button className="btn btn-outline btn-show-magic" onClick={ this._showTheMagic.bind(this) }>
                 Show me what it can do!
               </button>
+              <button onClick={ () => this._notificationSystem.current.clearNotifications() }>dismiss</button>
+              <button onClick={ () => {
+                const system = this._notificationSystem.current
+                system.clearNotifications()
+                const notif = system.addNotification(showcase[0])
+                setTimeout(() => system.removeNotification(notif), 500)
+              } }>Test</button>
               <span className="width-warning">Better experience in larger screens</span>
               <small className="more-magic">Click twice for more awesomeness!</small>
             </div>

@@ -104,21 +104,22 @@ export default class NotificationSystem extends React.Component {
 
   _didNotificationRemoved(uid) {
     var notification;
-    var notifications = this.state.notifications.filter(function(toCheck) {
-      if (toCheck.uid === uid) {
-        notification = toCheck;
-        return false;
+
+    this.setState(prevState => {
+      var notifications = prevState.notifications.filter(function(toCheck) {
+        if (toCheck.uid === uid) {
+          notification = toCheck;
+          return false;
+        }
+        return true;
+      });
+
+      if (notification && notification.onRemove) {
+        notification.onRemove(notification);
       }
-      return true;
-    });
 
-    if (this._isMounted) {
-      this.setState({ notifications: notifications });
-    }
-
-    if (notification && notification.onRemove) {
-      notification.onRemove(notification);
-    }
+      if (this._isMounted) return { notifications }
+    })
   }
 
   addNotification(notification) {
@@ -181,12 +182,14 @@ export default class NotificationSystem extends React.Component {
   getNotificationRef(notification) {
     var foundNotification = null;
 
+    // console.log({ notification })
+
     this.containerRefs.forEach(container => {
       container.current?.itemRefs.forEach((_notification) => {
-        if (_notification.current.props.notification.uid === (notification.uid ?? notification)) {
+        if (_notification.current?.props.notification.uid === (notification.uid ?? notification)) {
           // NOTE: Stop iterating further and return the found notification.
           // Since UIDs are uniques and there won't be another notification found.
-          foundNotification = _notification;
+          foundNotification = _notification.current;
         }
       });
     });
@@ -227,7 +230,7 @@ export default class NotificationSystem extends React.Component {
 
   clearNotifications() {
     this.containerRefs.forEach(container => {
-      container.current?.itemRefs.forEach(notification => notification.current._hideNotification())
+      container.current?.itemRefs.forEach(notification => notification.current?._hideNotification())
     });
   }
 
