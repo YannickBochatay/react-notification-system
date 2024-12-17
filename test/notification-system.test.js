@@ -42,7 +42,7 @@ describe('Notification Component', function() {
         return <NotificationSystem ref={ ref } style={ style } allowHTML={ true } noAnimation={ true } />;
       }
     }
-    await act(() => node = render(<ElementWrapper/>).container);
+    node = render(<ElementWrapper/>).container;
     notificationObj = Object.assign({}, defaultNotification);
     component = ref.current;
   });
@@ -71,7 +71,7 @@ describe('Notification Component', function() {
     await act(() => component.addNotification(defaultNotification));
     const notification = node.querySelector('.notification');
     expect(notification.className).toMatch(/notification/);
-    await sleep(400);
+    await act(() => sleep(400));
     expect(notification.className).toMatch(/notification-visible/);
   });
 
@@ -79,7 +79,6 @@ describe('Notification Component', function() {
     await act(() => component.addNotification(Object.assign({},defaultNotification, {className: 'FOO'})));
     const notification = node.querySelector('.notification');
     expect(notification.className).toContain(' FOO');
-
   });
 
   test('should render notifications in all positions with all levels', async() => {
@@ -108,7 +107,6 @@ describe('Notification Component', function() {
 
     const notifications = node.querySelectorAll('.notification');
     expect(notifications.length).toBe(count);
-
   });
 
   test('should render multiple notifications', async() => {
@@ -120,7 +118,6 @@ describe('Notification Component', function() {
 
     const notifications = node.querySelectorAll('.notification');
     expect(notifications.length).toBe(randomNumber);
-
   });
 
   test('should not render notifications with the same uid', async() => {
@@ -135,7 +132,7 @@ describe('Notification Component', function() {
   test('should remove a notification after autoDismiss', async () => {
     notificationObj.autoDismiss = 2;
     await act(() => component.addNotification(notificationObj));
-    await sleep(3000);
+    await act(() => sleep(3000));
     const notification = node.querySelectorAll('.notification');
     expect(notification.length).toBe(0);
   });
@@ -147,7 +144,7 @@ describe('Notification Component', function() {
     expect(notification.length).toBe(1);
 
     await act(() => component.removeNotification(notificationCreated));
-    await sleep(1000);
+    await act(() => sleep(1000));
     const notificationRemoved = node.querySelectorAll('.notification');
     expect(notificationRemoved.length).toBe(0);
   });
@@ -159,7 +156,7 @@ describe('Notification Component', function() {
     expect(notification.length).toBe(1);
 
     await act(() => component.removeNotification(notificationCreated.uid));
-    await sleep(200);
+    await act(() => sleep(200));
     const notificationRemoved = node.querySelectorAll('.notification');
     expect(notificationRemoved.length).toBe(0);
   });
@@ -174,7 +171,7 @@ describe('Notification Component', function() {
     const newContent = 'foobar';
 
     await act(() => component.editNotification(notificationCreated, { title: newTitle, message: newContent }));
-    await sleep(1000);
+    await act(() => sleep(1000));
     const notificationEdited = node.querySelector('.notification');
     expect(notificationEdited.querySelector('.notification-title').textContent).toBe(newTitle);
     expect(notificationEdited.querySelector('.notification-message').textContent).toBe(newContent);
@@ -190,7 +187,7 @@ describe('Notification Component', function() {
     const newContent = 'foobar';
 
     await act(() => component.editNotification(notificationCreated.uid, { title: newTitle, message: newContent }));
-    await sleep(1000);
+    await act(() => sleep(1000));
     const notificationEdited = node.querySelector('.notification');
     expect(notificationEdited.querySelector('.notification-title').textContent).toBe(newTitle);
     expect(notificationEdited.querySelector('.notification-message').textContent).toBe(newContent);
@@ -203,7 +200,7 @@ describe('Notification Component', function() {
     const notification = node.querySelectorAll('.notification');
     expect(notification.length).toBe(3);
     await act(() => component.clearNotifications());
-    await sleep(200);
+    await act(() => sleep(200));
     const notificationRemoved = node.querySelectorAll('.notification');
     expect(notificationRemoved.length).toBe(0);
   });
@@ -212,7 +209,7 @@ describe('Notification Component', function() {
     await act(() => component.addNotification(notificationObj));
     const notification = node.querySelector('.notification');
     await act(() => fireEvent.click(notification));
-    await sleep(1000);
+    await act(() => sleep(1000));
     const notificationRemoved = node.querySelectorAll('.notification');
     expect(notificationRemoved.length).toBe(0);
   });
@@ -221,7 +218,7 @@ describe('Notification Component', function() {
     await act(() => component.addNotification(notificationObj));
     const dismissButton = node.querySelector('.notification-dismiss');
     await act(() => fireEvent.click(dismissButton));
-    await sleep(1000);
+    await act(() => sleep(1000));
     const notificationRemoved = node.querySelectorAll('.notification');
     expect(notificationRemoved.length).toBe(0);
   });
@@ -231,7 +228,6 @@ describe('Notification Component', function() {
     await act(() => component.addNotification(notificationObj));
     const notification = node.querySelectorAll('.notification-title');
     expect(notification.length).toBe(0);
-
   });
 
   test('should not render message if not provided', async() => {
@@ -239,7 +235,6 @@ describe('Notification Component', function() {
     await act(() => component.addNotification(notificationObj));
     const notification = node.querySelectorAll('.notification-message');
     expect(notification.length).toBe(0);
-
   });
 
   test('should not dismiss the notificaion on click if dismissible is false', async() => {
@@ -281,7 +276,6 @@ describe('Notification Component', function() {
     await act(() => component.addNotification(defaultNotification));
     const button = node.querySelector('.notification-action-button');
     expect(button).toBeDefined();
-
   });
 
   test('should execute a callback function when notification button is clicked', async() => {
@@ -297,7 +291,6 @@ describe('Notification Component', function() {
     const button = node.querySelector('.notification-action-button');
     await act(() => fireEvent.click(button));
     expect(testThis).toBe(true);
-
   });
 
   test('should accept an action without callback function defined', async() => {
@@ -310,7 +303,6 @@ describe('Notification Component', function() {
     await act(() => fireEvent.click(button));
     const notification = node.querySelectorAll('.notification');
     expect(notification.length).toBe(0);
-
   });
 
   test('should execute a callback function on add a notification', async() => {
@@ -321,7 +313,6 @@ describe('Notification Component', function() {
 
     await act(() => component.addNotification(notificationObj));
     expect(testThis).toBe(true);
-
   });
 
   test('should execute a callback function on remove a notification', async() => {
@@ -334,7 +325,6 @@ describe('Notification Component', function() {
     const notification = node.querySelector('.notification');
     await act(() => fireEvent.click(notification));
     expect(testThis).toBe(true);
-
   });
 
   test('should render a children if passed', async() => {
@@ -345,7 +335,6 @@ describe('Notification Component', function() {
     await act(() => component.addNotification(defaultNotification));
     const customContainer = node.querySelector('.custom-container');
     expect(customContainer).toBeDefined();
-
   });
 
   test('should pause the timer if a notification has a mouse enter', async() => {
@@ -353,7 +342,7 @@ describe('Notification Component', function() {
     await act(() => component.addNotification(notificationObj));
     const notification = node.querySelector('.notification');
     await act(() => fireEvent.mouseEnter(notification));
-    await sleep(4000);
+    await act(() => sleep(4000));
     const _notification = node.querySelector('.notification');
     expect(_notification).toBeDefined();
   });
@@ -363,9 +352,9 @@ describe('Notification Component', function() {
     await act(() => component.addNotification(notificationObj));
     const notification = node.querySelector('.notification');
     await act(() => fireEvent.mouseEnter(notification));
-    await sleep(800);
+    await act(() => sleep(800));
     await act(() => fireEvent.mouseLeave(notification));
-    await sleep(2200);
+    await act(() => sleep(2200));
     const _notification = node.querySelectorAll('.notification');
     expect(_notification.length).toBe(0);
   });
@@ -376,7 +365,6 @@ describe('Notification Component', function() {
     const notification = node.querySelector('.notification-message');
     const htmlElement = notification.getElementsByClassName('allow-html-strong');
     expect(htmlElement.length).toBe(1);
-
   });
 
   test('should render containers with a overriden width', async() => {
@@ -385,7 +373,6 @@ describe('Notification Component', function() {
     const notification = node.querySelector('.notifications-tc');
     const width = notification.style.width;
     expect(width).toBe('600px');
-
   });
 
   test('should render a notification with specific style based on position', async() => {
@@ -394,7 +381,6 @@ describe('Notification Component', function() {
     const notification = node.querySelector('.notification');
     const bottomPosition = notification.style.bottom;
     expect(bottomPosition).toBe('-100px');
-
   });
 
   test('should render containers with a overriden width for a specific position', async() => {
@@ -403,13 +389,11 @@ describe('Notification Component', function() {
     const notification = node.querySelector('.notifications-tl');
     const width = notification.style.width;
     expect(width).toBe('800px');
-
   });
 
   test('should throw an error if no level is defined', async() => {
     delete notificationObj.level;
     expect(() => component.addNotification(notificationObj)).toThrow(/notification level is required/);
-
   });
 
   test('should throw an error if a invalid level is defined', async() => {
@@ -451,7 +435,7 @@ describe('Notification Component with newOnTop=true', function() {
         return <NotificationSystem ref={ ref } style={ style } allowHTML={ true } noAnimation={ true } newOnTop={ true } />;
       }
     }
-    await act(() => node = render(<ElementWrapper/>).container);
+    node = render(<ElementWrapper/>).container;
     component = ref.current;
   });
 
@@ -462,6 +446,5 @@ describe('Notification Component with newOnTop=true', function() {
     const notifications = node.querySelectorAll('.notification');
     expect(notifications[0].querySelector('.notification-title').textContent).toBe('2nd');
     expect(notifications[1].querySelector('.notification-title').textContent).toBe('1st');
-
   });
 });
