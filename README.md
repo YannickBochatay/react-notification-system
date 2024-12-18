@@ -1,6 +1,6 @@
 ### This is a fork from [https://github.com/igorprado/react-notification-system](https://github.com/igorprado/react-notification-system) to make it compatible with [react 19](https://react.dev/blog/2024/12/05/react-19).
 
-#### Rebuild with [Parcel](https://parceljs.org/) and [Jest](https://jestjs.io/).
+#### Rebuilt with [Parcel](https://parceljs.org/) and [Jest](https://jestjs.io/).
 
 ```sh
 npm install @ybochatay/react-notification-system
